@@ -1,0 +1,163 @@
+//Problem Statement : Paperless Scholarship for students
+#include<iostream>
+#include<string>
+#define max 10
+using namespace std;
+class PaperlessScholarship {
+private:
+	struct data {
+		string name;
+		string gender;
+		int hsc_mark;
+		float parent_income;
+		long int aadhar_no;
+		long int account_no;
+		struct node *next;
+	} s[max];
+	int top;
+public:
+	PaperlessScholarship() {
+		top=-1;
+	}
+	void insert(string,string,int,float,long int,long int);
+	void deletedata(string);
+	void insertatfirst(string,string,int,float,long int,long int);
+	void insertatparpos(int,string,string, int, float,long int,long int);
+	void deletelast();
+	void deleteatparpos(int);
+	void modify(int,string);
+	void search(string);
+	void display();
+};
+int main() {
+	PaperlessScholarship ps;
+	ps.insert("Rani","F",566,720000,908667576,6745459);
+	ps.insert("Fabina","F",543,767658,876764435,9877685);
+	ps.insert("Teddy","F",543,767658,876764435,9877685);
+	ps.insert("Priya","F",543,767658,876764435,9877685);
+	ps.insert("Dharshini","F",543,767658,876764435,9877685);
+	ps.display();
+	ps.deletedata("Rani");
+	cout<<"\nContents of list after deletion of a data:\n";
+	ps.display();
+	ps.insertatfirst("Rakshi","F",543,767658,876764435,9877685);
+	cout<<"\nContents of list after insertion @ first:\n";
+	ps.display();
+	ps.insertatparpos(4,"Rani","F",566,720000,908667576,6745459);
+	cout<<"\nContents of list after insertion @ a position:\n";
+	ps.display();
+	ps.deletelast();
+	cout<<"\nContents of list after deleting last element:\n";
+	ps.display();
+	ps.deleteatparpos(2);
+	cout<<"\nContents of list after deleting @ a position:\n";
+	ps.display();
+	ps.modify(1,"Celesta");
+	cout<<"\nContents of list after modification:\n";
+	ps.display();
+	cout<<"\nSearching :\n";
+	ps.search("Rakshi");
+}
+void PaperlessScholarship::insert(string name,string gender, int hsc_mark, float parent_income, long int adhaar_no,long int account_no) {
+	if(top==max-1) {
+		cout<<"\nSorry.The list is full,can't insert.";
+		return;
+	}
+	++top;
+	s[top].name=name;
+	s[top].gender=gender;
+	s[top].hsc_mark=hsc_mark;
+	s[top].parent_income=parent_income;
+	s[top].aadhar_no=adhaar_no;
+	s[top].account_no=account_no;
+
+}
+void PaperlessScholarship::display() {
+	if(top==-1) {
+		cout<<"\nSorry.List is empty,can't print";
+		return;
+	}
+	for(int i=0; i<=top; i++)
+		cout<<"NAME :"<< s[i].name<<"\t"<<"-->GENDER: "<<s[i].gender<<"\t-->HSC Mark:"<<s[i].hsc_mark<<"\t\t-->Parent Income: "<<s[i].parent_income<<"\t-->Account Number:"<<s[i].account_no<<"\t-->Aadhar Number:"<<s[i].aadhar_no<<endl;
+}
+void PaperlessScholarship::deletedata(string d) {
+	if(top == -1) {
+		cout<<"\n Sorry,the list is empty";
+		return;
+	}
+	for(int i=0; i<=top; i++) {
+		if(s[i].name==d)
+			while(i<top) {
+				s[i]=s[i+1];
+				++i;
+			}
+	}
+	--top;
+}
+void PaperlessScholarship::insertatfirst(string name,string gender, int hsc_mark, float parent_income, long int adhaar_no,long int account_no) {
+	if(top == max-1) {
+		cout<<"Sorry,the list is full";
+		return;
+	}
+	for(int i=top; i>=0; i--)
+		s[i+1]=s[i];
+	s[0].name=name;
+	s[0].gender=gender;
+	s[0].hsc_mark=hsc_mark;
+	s[0].parent_income=parent_income;
+	s[0].aadhar_no=adhaar_no;
+	s[0].account_no=account_no;
+	top++;
+}
+void PaperlessScholarship::insertatparpos(int pos,string name,string gender, int hsc_mark, float parent_income, long int adhaar_no,long int account_no) {
+	if(top == max-1)    {
+		cout<<"Sorry,the list is full";
+		return ;
+	}
+	for(int i=top; i>=pos; i--)
+		s[i+1]=s[i];
+	s[pos].name=name;
+	s[pos].gender=gender;
+	s[pos].hsc_mark=hsc_mark;
+	s[pos].parent_income=parent_income;
+	s[pos].aadhar_no=adhaar_no;
+	s[pos].account_no=account_no;
+	top++;
+}
+void PaperlessScholarship::deletelast() {
+	if(top == -1) {
+		cout<<"Sorry,the list is empty";
+		return;
+	}
+	top--;
+}
+void PaperlessScholarship::deleteatparpos(int pos) {
+	if(top == -1) {
+		cout<<"Sorry,the list is empty";
+		return;
+	}
+	for(int i=pos; i<=top; i++)
+		s[i]=s[i+1];
+	top--;
+}
+void PaperlessScholarship::modify(int value,string newv) {
+	if(top == -1) {
+		cout<<"Sorry,the list is empty";
+		return;
+	}
+	for(int i=0; i<=top; i++)    {
+		if(i == value) {
+			s[i].name=newv;
+		}
+	}
+}
+void PaperlessScholarship::search(string a) {
+	if(top == -1) {
+		cout<<"Sorry, the list is empty";
+		return;
+	}
+	for(int i=0; i<=top; i++)
+		if(s[i].name==a)
+			cout<<"NAME :"<< s[i].name<<"\t"<<"-->GENDER: "<<s[i].gender<<"\t-->HSC Mark:"<<s[i].hsc_mark<<"\t\t-->Parent Income: "<<s[i].parent_income<<"\t-->Account Number:"<<s[i].account_no<<"\t-->Aadhar Number:"<<s[i].aadhar_no<<endl;
+	return;
+}
