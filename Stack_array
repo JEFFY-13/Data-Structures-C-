@@ -1,0 +1,108 @@
+//Array based implementation of Stack ADT
+//Problem Statement : Paperless Scholarship for students
+#include<iostream>
+#include<string>
+#define max 10
+using namespace std;
+class PaperlessScholarship {
+private:
+	struct data {
+		string name;
+		string gender;
+		int hsc_mark;
+		float parent_income;
+		long int aadhar_no;
+		long int account_no;
+		struct node *next;
+	} s[max];
+	int top;
+public:
+	PaperlessScholarship() {
+		top=-1;
+	}
+	void PUSH(string,string,int,float,long int,long int);
+	int POP();
+	void display();
+	void ModifyTOP(string);
+	string Peek();
+	int isEmpty();
+	int isFull();
+	void clear();
+};
+int main() {
+	PaperlessScholarship ps;
+	ps.PUSH("Rani","F",566,720000,908667576,6745459);
+	ps.PUSH("Fabina","F",543,767658,876764435,9877685);
+	ps.PUSH("Teddy","F",543,767658,876764435,9877685);
+	ps.PUSH("Priya","F",543,767658,876764435,9877685);
+	ps.PUSH("Dharshini","F",543,767658,876764435,9877685);
+	ps.display();
+	ps.POP();    
+	cout<<"\nAfter deleting :\n";
+	ps.display();
+	ps.ModifyTOP("Jeya");
+	cout<<"\nAfter modification:\n";
+	ps.display();
+	cout<<"\nIs the stack empty : "<<ps.isEmpty();
+	cout<<"\nTop:"<<ps.Peek();
+	cout<<"\nIs the stack full : "<<ps.isFull();
+	ps.clear();
+	cout<<"\n";
+	ps.display();
+	return 0;
+}
+void PaperlessScholarship::PUSH(string name,string gender, int hsc_mark, float parent_income, long int adhaar_no,long int account_no) {
+	if(top==max-1) {
+		cout<<"\nSorry.The stack is full,can't insert.";
+		return;
+	}
+	++top;
+	s[top].name=name;
+	s[top].gender=gender;
+	s[top].hsc_mark=hsc_mark;
+	s[top].parent_income=parent_income;
+	s[top].aadhar_no=adhaar_no;
+	s[top].account_no=account_no;
+
+}
+void PaperlessScholarship::display() {
+	if(top==-1) {
+		cout<<"\nSorry.Stack is empty,can't print";
+		return;
+	}
+	for(int i=0; i<=top; i++)
+		cout<<"NAME :"<< s[i].name<<"\t"<<"-->GENDER: "<<s[i].gender<<"\t-->HSC Mark:"<<s[i].hsc_mark<<"\t\t-->Parent Income: "<<s[i].parent_income<<"\t-->Account Number:"<<s[i].account_no<<"\t-->Aadhar Number:"<<s[i].aadhar_no<<endl;
+}
+int PaperlessScholarship::POP(){
+	int x;
+	if(top==-1){
+ 		cout<<"\nSorry Stack Underflow,Can't print";
+ 		return -1;
+ 	}
+ 	x=s[top].hsc_mark;
+ 	--top;
+	return x;
+}
+void PaperlessScholarship::ModifyTOP(string newData){
+ 	if(top == -1){
+ 		cout<<"\nSorry stack is empty,cannot modify TOP";
+ 		return;
+ 	}
+ 	s[top].name = newData;
+}
+string PaperlessScholarship::Peek(){
+	if(top==-1){
+ 		cout<<"\nSorry stack is empty,Stack underflow";
+	}
+	string p=s[top].name;
+	return p;
+}
+int PaperlessScholarship::isFull(){
+ return (top == max-1);
+}
+int PaperlessScholarship::isEmpty(){
+ 	return (top == -1);
+}
+void PaperlessScholarship::clear(){
+	top=-1;
+}
