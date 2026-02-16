@@ -1,0 +1,145 @@
+// Array based implementation of Queue ADT
+// Problem Statement : Paperless Scholarship for students
+#include<iostream>
+#include<string>
+#define max 10
+using namespace std;
+class PaperlessScholarship {
+private:
+    struct data {
+        string name;
+        string gender;
+        int hsc_mark;
+        float parent_income;
+        long int aadhar_no;
+        long int account_no;
+        struct node *next;
+    } s[max];
+    int front;
+    int rear;
+public:
+    PaperlessScholarship() {
+        front = -1;
+        rear = -1;
+    }
+    void Enqueue(string, string, int, float, long int, long int);
+    int Dequeue();
+    void display();
+    void ModifyFront(string);
+    void ModifyRear(string);
+    void PeekFront();
+    void PeekRear();
+    int isEmpty();
+    int isFull();
+    void clear();
+};
+int main() {
+    PaperlessScholarship ps;
+    ps.Enqueue("Rani", "F", 566, 720000, 908667576, 6745459);
+    ps.Enqueue("Fabina", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Teddy", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Priya", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Dharshini", "F", 543, 767658, 876764435, 9877685);  
+    ps.display();
+    ps.Dequeue();    
+    cout << "\nAfter deleting:\n";
+    ps.display();   
+    ps.ModifyFront("Abi");
+    cout << "\nAfter modification @ front:\n";
+    ps.display();
+    ps.ModifyRear("Jeni");
+    cout << "\nAfter modification @ rear:\n";
+    ps.display();  
+    cout << "\nIs the queue empty : " << ps.isEmpty();
+    cout << "\nIs the queue full : " << ps.isFull();  
+    cout << "\nFront:\n";
+    ps.PeekFront();    
+    cout << "\nRear:\n";
+    ps.PeekRear();    
+    ps.clear();
+    ps.display();
+    return 0;
+}
+void PaperlessScholarship::Enqueue(string name, string gender, int hsc_mark, float parent_income, long int adhaar_no, long int account_no) {
+    if (rear == max - 1) {
+        cout << "\nSorry queue overflow, can't insert";
+        return;
+    }
+    if (front == -1)
+        ++front;
+    ++rear;
+    s[rear].name = name;
+    s[rear].gender = gender;
+    s[rear].hsc_mark = hsc_mark;
+    s[rear].parent_income = parent_income;
+    s[rear].aadhar_no = adhaar_no;
+    s[rear].account_no = account_no;
+}
+void PaperlessScholarship::display() {
+    if (front == -1) {
+        cout << "\nSorry queue Underflow, can't print";
+        return;
+    }
+    cout << "\nThe queue contents are:\n";
+    for (int i = front; i <= rear; i++) {
+        cout << "NAME :" << s[i].name << "\t" << "-->GENDER: " << s[i].gender 
+             << "\t-->HSC Mark:" << s[i].hsc_mark << "\t\t-->Parent Income: " 
+             << s[i].parent_income << "\t-->Account Number:" << s[i].account_no 
+             << "\t-->Aadhar Number:" << s[i].aadhar_no << endl;
+    }
+}
+int PaperlessScholarship::Dequeue() {
+    if (front == -1) {
+        cout << "\nSorry queue Underflow, can't print";
+        return -1;
+    }
+    int x = s[front].hsc_mark;
+    ++front;
+    if (front == rear + 1)
+        front = rear = -1;
+    return x;
+}
+void PaperlessScholarship::ModifyFront(string newData) {
+    if (front == -1) {
+        cout << "\nSorry queue is empty, cannot modify TOP";
+        return;
+    }
+    s[front].name = newData;
+}
+void PaperlessScholarship::ModifyRear(string newData) {
+    if (front == -1) {
+        cout << "\nSorry queue is empty, cannot modify TOP";
+        return;
+    }
+    s[rear].name = newData;
+}
+void PaperlessScholarship::PeekFront() {
+    if (front == -1) {
+        cout << "\nSorry queue is empty, queue underflow";
+        return;
+    }
+    cout << "NAME: " << s[front].name << "\t--> GENDER: " << s[front].gender 
+         << "\t--> HSC Mark: " << s[front].hsc_mark << "\t--> Parent Income: " 
+         << s[front].parent_income << "\t--> Account Number: " << s[front].account_no 
+         << "\t--> Aadhar Number: " << s[front].aadhar_no << "\n";
+}
+void PaperlessScholarship::PeekRear() {
+    if (front == -1) {
+        cout << "\nSorry queue is empty, queue underflow";
+        return;
+    }
+    cout << "NAME: " << s[rear].name << "\t--> GENDER: " << s[rear].gender 
+         << "\t--> HSC Mark: " << s[rear].hsc_mark << "\t--> Parent Income: " 
+         << s[rear].parent_income << "\t--> Account Number: " << s[rear].account_no 
+         << "\t--> Aadhar Number: " << s[rear].aadhar_no << "\n";
+}
+int PaperlessScholarship::isEmpty() {
+    return (front == -1);
+}
+void PaperlessScholarship::clear() {
+    front = -1;
+    rear = -1;
+}
+int PaperlessScholarship::isFull() {
+    return (rear == max - 1);
+}
