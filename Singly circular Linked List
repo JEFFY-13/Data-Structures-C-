@@ -1,0 +1,292 @@
+// Singly circular Linked List
+// Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <iomanip>
+using namespace std;
+class Scholarship {
+private:
+    struct PaperFree {
+        string name;
+        char gender;
+        int hsc_mark;
+        float parent_income;
+        long int aadhar_no;
+        long int account_no;
+        PaperFree* nxt;
+    } *h = NULL, *p = NULL, *t = NULL;
+    void saveToFile();
+    void loadFromFile();
+public:
+    Scholarship() {
+        loadFromFile();
+    }
+    void insert(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no);
+    void displayForward();
+    void del(const string& name);
+    void searchForward(const string& searchname);
+    void modify(const string& oldname, const string& newname);
+    void clear();
+    void insertAtBeginning(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no);
+    void insertAtPosition(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no, int pos);
+    void deleteAtBeginning();
+    void deleteAtEnd();
+};
+void Scholarship::insert(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+    t = new PaperFree{name, gender, hsc_mark, parent_income, aadhar_no, account_no, NULL};
+    if (h == NULL) {
+        h = t;
+        h->nxt = h; 
+    } else {
+        p = h;
+        while (p->nxt != h) {
+            p = p->nxt;
+        }
+        p->nxt = t;
+        t->nxt = h; 
+    }
+    saveToFile();
+}
+void Scholarship::displayForward() {
+    if (h == NULL) {
+        cout << "Sorry, the list is empty." << endl;
+        return;
+    }
+    p = h;
+    cout << left << setw(15) << "Name"
+         << setw(8) << "Gender"
+         << setw(10) << "HSC Mark"
+         << setw(15) << "Parent Income"
+         << setw(15) << "Aadhar No"
+         << setw(15) << "Account No" << endl;
+    do {
+        cout << left << setw(15) << p->name
+             << setw(8) << p->gender
+             << setw(10) << p->hsc_mark
+             << setw(15) << p->parent_income
+             << setw(15) << p->aadhar_no
+             << setw(15) << p->account_no << endl;
+        p = p->nxt;
+    } while (p != h);
+}
+void Scholarship::del(const string& name) {
+    if (h == NULL) {
+        cout << "Sorry, the list is empty; can't delete." << endl;
+        return;
+    }
+    if (h->name == name) {
+        p = h;
+        if (h->nxt == h) { 
+            delete p;
+            h = NULL;
+        } else {
+            PaperFree* last = h;
+            while (last->nxt != h) {
+                last = last->nxt;
+            }
+            last->nxt = h->nxt; 
+            delete p;
+            h = last->nxt; 
+        }
+    } else {
+        p = h->nxt;
+        PaperFree* prev = h;
+        while (p != h) {
+            if (p->name == name) {
+                prev->nxt = p->nxt; 
+                delete p;
+                break;
+            }
+            prev = p;
+            p = p->nxt;
+        }
+    }
+    saveToFile();
+}
+void Scholarship::saveToFile() {
+    ofstream outFile("scholarship_data.txt");
+    if (outFile.is_open()) {
+        if (h != NULL) {
+            p = h;
+            do {
+                outFile << p->name << ' '
+                        << p->gender << ' '
+                        << p->hsc_mark << ' '
+                        << p->parent_income << ' '
+                        << p->aadhar_no << ' '
+                        << p->account_no << endl;
+                p = p->nxt;
+            } while (p != h);
+        }
+        outFile.close();
+    } else {
+        cout << "Unable to open file for writing." << endl;
+    }
+}
+void Scholarship::loadFromFile() {
+    ifstream inFile("scholarship_data.txt");
+    if (inFile.is_open()) {
+        while (true) {
+            string name;
+            char gender;
+            int hsc_mark;
+            float parent_income;
+            long int aadhar_no, account_no;
+            inFile >> name >> gender >> hsc_mark >> parent_income >> aadhar_no >> account_no;
+            if (inFile.fail()) break; 
+            insert(name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+        }
+        inFile.close();
+    } else {
+        cout << "No previous data found." << endl;
+    }
+}
+void Scholarship::searchForward(const string& searchname) {
+    if (h == NULL) {
+        cout << "\nSorry, the list is empty." << endl;
+        return;
+    }
+    p = h;
+    do {
+        if (p->name == searchname) {
+            cout << "The info of name " << searchname << " is:\n"
+                 << left << setw(15) << p->name
+                 << setw(8) << p->gender
+                 << setw(10) << p->hsc_mark
+                 << setw(15) << p->parent_income
+                 << setw(15) << p->aadhar_no
+                 << setw(15) << p->account_no << endl;
+            return;
+        }
+        p = p->nxt;
+    } while (p != h);
+    cout << "No data found for the name " << searchname << endl;
+}
+void Scholarship::modify(const string& oldname, const string& newname) {
+    if (h == NULL) {
+        cout << "Sorry, the list is empty." << endl;
+        return;
+    }
+    p = h;
+    do {
+        if (p->name == oldname) {
+            p->name = newname;
+            cout << "Name modified successfully." << endl;
+            saveToFile();
+            return;
+        }
+        p = p->nxt;
+    } while (p != h);
+    cout << "Name not found for modification." << endl;
+}
+void Scholarship::clear() {
+    if (h == NULL) {
+        cout << "The list is already empty." << endl;
+        return;
+    }
+    p = h;
+    PaperFree* first = h;
+    do {
+        t = p;
+        p = p->nxt;
+        delete t;
+    } while (p != first);
+    h = NULL;
+    saveToFile();
+    cout << "The list has been cleared." << endl;
+}
+void Scholarship::insertAtBeginning(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+    t = new PaperFree{name, gender, hsc_mark, parent_income, aadhar_no, account_no, NULL};
+    if (h == NULL) {
+        h = t;
+        h->nxt = h; 
+    } else {
+        t->nxt = h;
+        PaperFree* last = h;
+        while (last->nxt != h) {
+            last = last->nxt;
+        }
+        last->nxt = t; 
+        h = t; 
+    }
+    saveToFile();
+}
+void Scholarship::insertAtPosition(const string& name, char gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no, int pos) {
+    if (pos == 0) {
+        insertAtBeginning(name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+        return;
+    }
+    t = new PaperFree{name, gender, hsc_mark, parent_income, aadhar_no, account_no, NULL};
+    p = h;
+    for (int i = 0; i < pos - 1; i++) {
+        if (p->nxt == h) {
+            cout << "Position out of bounds. Inserting at the end." << endl;
+            break;
+        }
+        p = p->nxt;
+    }
+    t->nxt = p->nxt;
+    p->nxt = t;
+    saveToFile();
+}
+void Scholarship::deleteAtBeginning() {
+    if (h == NULL) {
+        cout << "List is empty. Cannot delete." << endl;
+        return;
+    }
+    del(h->name);
+}
+void Scholarship::deleteAtEnd() {
+    if (h == NULL) {
+        cout << "Sorry, the list is empty; can't delete." << endl;
+        return;
+    }
+    PaperFree* ptr = h;
+    if (h->nxt == h) { // Only one node
+        delete h;
+        h = NULL;
+    } else {
+        while (ptr->nxt->nxt != h) { 
+            ptr = ptr->nxt;
+        }
+        delete ptr->nxt; 
+        ptr->nxt = h; 
+    }
+    saveToFile();
+}
+int main() {
+    Scholarship s;
+    cout << "Inserting data:\n";
+    s.insert("Meera", 'F', 490, 40000, 603220304050, 5235672642);
+    s.insert("Priya", 'F', 485, 50000, 603220306542, 105233172642);
+    s.insert("Nisha", 'F', 480, 60000, 603220306871, 100646573208);
+    s.insert("Keerthy", 'F', 475, 70000, 603220302006, 640687463077);
+    s.insert("Madhu", 'F', 491, 30000, 603220309076, 3049846505987);
+    cout << "\nDisplaying data in forward:\n";
+    s.displayForward();
+    cout << "\nSearching info in forward for 'Priya':\n";
+    s.searchForward("Priya");
+    cout << "\nModifying name 'Priya' to 'Gayathri':\n";
+    s.modify("Priya", "Gayathri");
+    s.displayForward();
+    cout << "\nDeleting name 'Keerthy':\n";
+    s.del("Keerthy");
+    s.displayForward();
+    cout << "\nInserting at beginning:\n";
+    s.insertAtBeginning("Anjali", 'F', 495, 30000, 603220301234, 304984650598);
+    s.displayForward();
+    cout << "\nDeleting at beginning:\n";
+    s.deleteAtBeginning();
+    s.displayForward();
+    cout << "\nInserting at position 1:\n";
+    s.insertAtPosition("Ravi", 'M', 480, 45000, 603220302345, 304984650599, 1);
+    s.displayForward();
+    cout << "\nDeleting at end:\n";
+    s.deleteAtEnd();
+    s.displayForward();
+    cout << "\nClearing the list:\n";
+    s.clear();
+    s.displayForward();
+    return 0;
+}
