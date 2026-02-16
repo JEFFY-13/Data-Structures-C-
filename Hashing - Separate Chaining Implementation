@@ -1,0 +1,121 @@
+//Hashing - Separate Chaining Implementation
+//Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#define TABLE_SIZE 13
+using namespace std;
+class PaperlessScholarship {
+private:
+	struct data {
+		int key;
+		string name;
+		string gender;
+		int hsc_mark;
+		float parent_income;
+		long int aadhar_no;
+		long int account_no;
+		data* next;
+	}* table[TABLE_SIZE];
+public:
+	PaperlessScholarship() {
+		for (int i = 0; i < TABLE_SIZE; i++)
+			table[i] = NULL;
+	}
+	data* createNode(int,string,string,int,float,long int,long int);
+	int hash(int);
+	void insert(int,string,string,int,float,long int,long int);
+	void display();
+	void Delete(int);
+	data* find(int);
+};
+PaperlessScholarship::data* PaperlessScholarship:: createNode(int key,string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+	data* newNode = new data;
+	newNode->key = key;
+	newNode->name = name;
+	newNode->gender = gender;
+	newNode->hsc_mark = hsc_mark;
+	newNode->parent_income = parent_income;
+	newNode->aadhar_no = aadhar_no;
+	newNode->account_no = account_no;
+	newNode->next = NULL;
+	return newNode;
+}
+int PaperlessScholarship::hash(int hsc_mark) {
+	return hsc_mark % TABLE_SIZE;
+}
+void PaperlessScholarship::insert(int key,string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+	int index = hash(key);
+	data* newNode = createNode(key, name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+	newNode->next = table[index]; 
+	table[index] = newNode; 
+}
+void PaperlessScholarship::display() {
+	cout << "\nIndex\tValue";
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		cout << "\n" << i << "\t";
+		data* temp = table[i];
+		if (temp == NULL)
+			cout << "X"; 
+		else {
+			while (temp != NULL) {
+				cout << temp->key << " -> "<< temp->name << "\t" <<temp->gender << " -> "<< "\t" << temp->hsc_mark << " -> "<< "\t"<< temp->parent_income << " -> "<< "\t" << temp->aadhar_no << " -> "<< "\t"<< temp->account_no;
+				temp = temp->next;
+			}
+			cout << "X"; // End of chain
+		}
+	}
+	cout << "\n";
+}
+PaperlessScholarship::data* PaperlessScholarship::find(int key) {
+	int index = hash(key);
+	data* temp = table[index];
+	while (temp != NULL && temp->key != key)
+		temp = temp->next;
+	return temp; 
+}
+void PaperlessScholarship::Delete(int key) {
+	int index = hash(key);
+	data* temp = table[index];
+	data* prev = NULL;
+	while (temp != NULL && temp->key != key) {
+		prev = temp;
+		temp = temp->next;
+	}
+	if (temp == NULL) {
+		cout << "\nElement not found in the hash table.";
+		return;
+	}
+	if (prev == NULL) 
+		table[index] = temp->next;
+	else
+		prev->next = temp->next;
+	delete temp; 
+}
+int main() {
+	PaperlessScholarship ps;
+	cout << "\nEmpty Hash Table";
+	ps.display();
+	ps.insert(0,"Rani","F",566,720000,908667576,6745459);
+	ps.insert(1,"Fabina","F",543,767658,876764435,9877685);
+	ps.insert(2,"Teddy","F",423,767658,876764435,9877685);
+	ps.insert(3,"Rakshi","F",592,90000,908667576,6745459);
+	ps.insert(4,"Dharshini","F",465,767658,876764435,9877685);
+	ps.insert(5,"Sheena","F",470,48000,876764435,6745459);
+	ps.insert(6,"Abigail","F",590,48000,876764435,6745459);
+	ps.insert(7,"Jean","F",472,52000,908667576,9877685);
+	ps.insert(8,"Priya","F",596,767658,876764435,9877685);
+	ps.insert(9,"Reebha","F",461,75000,908667576,6745459);
+	cout << "\nHash Table after Insertion";
+	ps.display();
+	ps.Delete(2);
+	ps.Delete(5);
+	cout << "\nHash Table after Deletion";
+	ps.display();
+	int s;
+	cout << "\nEnter data to be searched: ";
+	cin >> s;
+	if (ps.find(s) != NULL)
+		cout << "The data " << s << " is found in the hash table.";
+	else
+		cout << "\nThe data " << s << " is not found";
+	return 0;
+}
