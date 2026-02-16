@@ -1,0 +1,112 @@
+//Hashing - Linear Probing Implementation
+//Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+#define TABLE_SIZE 13
+using namespace std;
+class PaperlessScholarship {
+private:
+	struct data {
+		int key;
+		string name;
+		string gender;
+		int hsc_mark;
+		float parent_income;
+		long int aadhar_no;
+		long int account_no;
+	} table[TABLE_SIZE];
+public:
+	PaperlessScholarship();
+	int hash(int);
+	void insert(int,string,string,int,float,long int,long int);
+	void display();
+	void Delete(int);
+	int find(int);
+};
+PaperlessScholarship::PaperlessScholarship() {
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		table[i].key = -1;
+		table[i].name ="";
+		table[i].gender ="";
+		table[i].hsc_mark = -1;
+		table[i].parent_income = -1;
+		table[i].aadhar_no = -1;
+		table[i].account_no = -1;
+	}
+}
+int PaperlessScholarship::hash(int hsc_mark) {
+	return hsc_mark % TABLE_SIZE;
+}
+void PaperlessScholarship::insert(int key,string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+	int index = hash(key);
+	int i = 0;
+	while (table[(index + i) % TABLE_SIZE].hsc_mark != -1)
+		i++;
+	table[(index + i) % TABLE_SIZE].key = key;
+	table[(index + i) % TABLE_SIZE].name = name;
+	table[(index + i) % TABLE_SIZE].gender = gender;
+	table[(index + i) % TABLE_SIZE].hsc_mark = hsc_mark;
+	table[(index + i) % TABLE_SIZE].parent_income = parent_income;
+	table[(index + i) % TABLE_SIZE].aadhar_no = aadhar_no;
+	table[(index + i) % TABLE_SIZE].account_no = account_no;
+}
+void PaperlessScholarship::display() {
+	cout << "\nIndex\tValue";
+	for (int i = 0; i < TABLE_SIZE; i++) {
+		cout << "\n" << i << "\t";
+		if (table[i].key != -1) {
+			cout << table[i].key << "\t" << table[i].name << "\t" << table[i].gender << "\t"<< table[i].hsc_mark << "\t" << table[i].parent_income << "\t"<< table[i].aadhar_no << "\t" << table[i].account_no;
+		}
+		else {
+			cout << "-";
+		}
+	}
+	cout << "\n";
+}
+void PaperlessScholarship::Delete(int key) {
+	int index = find(key);
+	if (index == -1) {
+		cout << "\nElement not found in the hash table.";
+		return;
+	}
+	table[index].key = -1;
+}
+int PaperlessScholarship::find(int key) {
+	int index = hash(key);
+	int i = 0;
+	while (table[(index + i) % TABLE_SIZE].key != -1) {
+		if (table[(index + i) % TABLE_SIZE].hsc_mark == key)
+			return (index + i) % TABLE_SIZE;
+		i++;
+	}
+	return -1;
+}
+int main() {
+	PaperlessScholarship ps;
+	cout<<"\nEmpty Hash Table";
+	ps.display();
+	ps.insert(0,"Rani","F",566,720000,908667576,6745459);
+	ps.insert(1,"Fabina","F",543,767658,876764435,9877685);
+	ps.insert(2,"Teddy","F",423,767658,876764435,9877685);
+	ps.insert(3,"Rakshi","F",592,90000,908667576,6745459);
+	ps.insert(4,"Dharshini","F",465,767658,876764435,9877685);
+	ps.insert(5,"Sheena","F",470,48000,876764435,6745459);
+	ps.insert(6,"Abigail","F",590,48000,876764435,6745459);
+	ps.insert(7,"Jean","F",472,52000,908667576,9877685);
+	ps.insert(8,"Priya","F",596,767658,876764435,9877685);
+	ps.insert(9,"Reebha","F",461,75000,908667576,6745459);
+	cout<<"\nHash Table after Insertion";
+	ps.display();
+	ps.Delete(470);
+	ps.Delete(461);
+	cout<<"\nHash Table after Deletion";
+	ps.display();
+	int s;
+	cout<<"\nEnter data to be searched:";
+	cin>>s;
+	if(ps.find(s)!=-1)
+		cout<<"The data "<<s<<" is found at index:"<<ps.find(s);
+	else
+		cout<<"\nThe data "<<s<<" is not found";
+	return 0;
+}
