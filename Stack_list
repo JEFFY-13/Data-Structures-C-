@@ -1,0 +1,107 @@
+//Linked List based Implementation of Stack
+//Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+using namespace std;
+class PaperlessScholarship {
+private:
+    struct data {
+        string name;
+        string gender;
+        int hsc_mark;
+        float parent_income;
+        long int aadhar_no;
+        long int account_no;
+        struct data *nxt;
+    } *top = NULL, *p = NULL, *temp = NULL;
+public:
+    PaperlessScholarship() {
+        top = NULL;
+        p = NULL;
+        temp = NULL;
+    }
+    void PUSH(string, string, int, float, long int, long int);
+    int POP();
+    void display();
+    void ModifyTOP(string);
+	void Peek();
+	int isEmpty();
+	void clear();
+};
+int main() {
+    PaperlessScholarship ps;
+    ps.PUSH("Rani", "F", 566, 720000, 908667576, 6745459);
+    ps.PUSH("Fabina", "F", 543, 767658, 876764435, 9877685);
+    ps.PUSH("Teddy", "F", 543, 767658, 876764435, 9877685);
+    ps.PUSH("Priya", "F", 543, 767658, 876764435, 9877685);
+    ps.PUSH("Dharshini", "F", 543, 767658, 876764435, 9877685);
+    cout << "Displaying stack:\n";
+    ps.display();
+    ps.POP();    
+    cout << "\nAfter deleting:\n";
+    ps.display();
+    ps.ModifyTOP("Abi");
+    cout<<"\nAfter modification :\n";
+    ps.display();
+    cout<<"\nIs the stack empty : "<<ps.isEmpty();
+	cout<<"\nTop:\n";
+	ps.Peek();
+	ps.clear();
+	ps.display();
+	return 0;
+}
+void PaperlessScholarship::PUSH(string n, string g, int h, float pc, long int adh, long int acc) {
+    temp = new struct data;
+    temp->name = n;
+    temp->gender = g;
+    temp->hsc_mark = h;
+    temp->parent_income = pc;
+    temp->aadhar_no = adh;
+    temp->account_no = acc;
+    
+
+    temp->nxt = top; 
+    top = temp;
+}
+void PaperlessScholarship::display() {
+    if (top == NULL) {
+        cout << "\nSorry, Stack is empty, Can't print";
+        return;
+    }
+    p = top;
+    while (p != NULL) {
+        cout<< "NAME: " << p->name<< "\t--> GENDER: " << p->gender<< "\t--> HSC Mark: " << p->hsc_mark<< "\t--> Parent Income: " << p->parent_income<< "\t--> Account Number: " << p->account_no<< "\t--> Aadhar Number: " << p->aadhar_no << "\n";
+        p = p->nxt;
+    }
+}
+int PaperlessScholarship::POP() {
+    if (top == NULL) {
+        cout << "\nSorry, Stack is empty, Can't delete";
+        return -1;
+    }
+    p = top;
+    int x = top->hsc_mark;
+    top = top->nxt;
+    delete p;
+    return x;
+}
+int PaperlessScholarship::isEmpty(){
+ 	return (top == NULL);
+}
+void PaperlessScholarship::ModifyTOP(string newData){
+ 	if(top == NULL){
+ 		cout<<"\nSorry stack is empty,cannot modify TOP";
+ 		return;
+ 	}
+ 	top->name = newData;
+}
+void PaperlessScholarship::Peek(){
+	if(top==-NULL){
+ 		cout<<"\nSorry stack is empty,Stack underflow";
+	}
+	p=top;
+	cout<< "NAME: " << p->name<< "\t--> GENDER: " << p->gender<< "\t--> HSC Mark: " << p->hsc_mark<< "\t--> Parent Income: " << p->parent_income<< "\t--> Account Number: " << p->account_no<< "\t--> Aadhar Number: " << p->aadhar_no << "\n";
+}
+void PaperlessScholarship::clear(){
+	top=NULL;
+}
