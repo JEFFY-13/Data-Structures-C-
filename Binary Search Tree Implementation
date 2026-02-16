@@ -1,0 +1,172 @@
+//Binary Search Tree Implementation
+//Propslem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+using namespace std;
+class PaperlessScholarship {
+private:
+    struct data {
+        string name;
+        string gender;
+        int hsc_mark;
+        float parent_income;
+        long int aadhar_no;
+        long int account_no;
+        struct data* left;
+        struct data* right;
+    } *root, *temp;
+    struct data* createdata(string, string, int, float, long int, long int);
+    struct data* insert(struct data*, string, string, int, float, long int, long int);
+    void preorder(struct data*);
+    void postorder(struct data*);
+    void inorder(struct data*);
+    struct data* maximum(struct data*);
+    struct data* minimum(struct data*);
+    struct data* Delete(struct data*, string);
+public:
+    PaperlessScholarship(){
+	 	root = NULL; 
+	}
+    void insert(string, string, int, float, long int, long int);
+    void preorder();
+    void postorder();
+    void inorder();
+    int maximum();
+    int minimum();
+    void Delete(string);
+};
+void PaperlessScholarship::insert(string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+    root = insert(root, name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+}
+PaperlessScholarship::data* PaperlessScholarship::insert(struct data* T, string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+    if (T == NULL)
+        T = createdata(name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+    else if (hsc_mark > T->hsc_mark)
+        T->right = insert(T->right, name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+    else if (hsc_mark < T->hsc_mark)
+        T->left = insert(T->left, name, gender, hsc_mark, parent_income, aadhar_no, account_no);
+    return T;
+}
+PaperlessScholarship::data* PaperlessScholarship::createdata(string name, string gender, int hsc_mark, float parent_income, long int aadhar_no, long int account_no) {
+    temp = new struct data;
+    temp->name = name;
+    temp->gender = gender;
+    temp->hsc_mark = hsc_mark;
+    temp->parent_income = parent_income;
+    temp->aadhar_no = aadhar_no;
+    temp->account_no = account_no;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+void PaperlessScholarship::preorder() {
+    preorder(root);
+}
+void PaperlessScholarship::preorder(struct data* T) {
+    if (T != NULL) {
+        cout << T->name << " " << T->gender << " " << T->hsc_mark << " " << T->parent_income << " " << T->aadhar_no << " " << T->account_no << endl;
+        preorder(T->left);
+        preorder(T->right);
+    }
+}
+void PaperlessScholarship::postorder() {
+    postorder(root);
+}
+void PaperlessScholarship::postorder(struct data* T) {
+    if (T != NULL) {
+        postorder(T->left);
+        postorder(T->right);
+        cout << T->name << " " << T->gender << " " << T->hsc_mark << " " << T->parent_income << " " << T->aadhar_no << " " << T->account_no << endl;
+    }
+}
+void PaperlessScholarship::inorder() {
+    inorder(root);
+}
+void PaperlessScholarship::inorder(struct data* T) {
+    if (T != NULL) {
+        inorder(T->left);
+        cout << T->name << " " << T->gender << " " << T->hsc_mark << " " << T->parent_income << " " << T->aadhar_no << " " << T->account_no << endl;
+        inorder(T->right);
+    }
+}
+PaperlessScholarship::data* PaperlessScholarship::maximum(struct data* T) {
+    while (T->right != NULL)
+        T = T->right;
+    return T;
+}
+int PaperlessScholarship::maximum() {
+    if (root != NULL)
+        return maximum(root)->hsc_mark;
+    return -1;
+}
+PaperlessScholarship::data* PaperlessScholarship::minimum(struct data* T) {
+    while (T->left != NULL)
+        T = T->left;
+    return T;
+}
+int PaperlessScholarship::minimum() {
+    if (root != NULL)
+        return minimum(root)->hsc_mark;
+    return -1;
+}
+void PaperlessScholarship::Delete(string name) {
+    root = Delete(root, name);
+}
+PaperlessScholarship::data* PaperlessScholarship::Delete(struct data* T, string name) {
+    if (T == NULL) {
+        return NULL;
+    }
+    else if (name > T->name) {
+        T->right = Delete(T->right, name);
+    }
+    else if (name < T->name) {
+        T->left = Delete(T->left, name);
+    }
+    else {
+        if (T->left == NULL && T->right == NULL) {
+            delete T;
+            return NULL;
+        }
+        else if (T->left == NULL) {
+            temp = T;
+            T = T->right;
+            delete temp;
+        }
+        else if (T->right == NULL) {
+            temp = T;
+            T = T->left;
+            delete temp;
+        }
+        else {
+            temp = minimum(T->right);
+            T->name = temp->name;
+            T->gender = temp->gender;
+            T->hsc_mark = temp->hsc_mark;
+            T->parent_income = temp->parent_income;
+            T->aadhar_no = temp->aadhar_no;
+            T->account_no = temp->account_no;
+            T->right = Delete(T->right, temp->name);
+        }
+    }
+    return T;
+}
+int main() {
+    PaperlessScholarship ps;
+    ps.insert("Rani", "F", 566, 720000, 908667576, 6745459);
+    ps.insert("Fabina", "F", 543, 767658, 876764435, 9877685);
+    ps.insert("Teddy", "F", 423, 767658, 876764435, 9877685);
+    ps.insert("Priya", "F", 596, 767658, 876764435, 9877685);
+    ps.insert("Dharshini", "F", 465, 767658, 876764435, 9877685);
+    cout<<"\nThe Preorder sequence:\n"<<endl;
+    ps.preorder();
+    cout<<"\nThe Postorder sequence:\n"<<endl;
+    ps.postorder();
+    cout<<"\nThe Inorder sequence:\n"<<endl;
+    ps.inorder();
+    cout<<"\nThe maximum HSC mark in the PaperlessScholarship: "<<ps.maximum()<<endl;
+    cout<<"\nThe minimum HSC mark in the PaperlessScholarship: "<<ps.minimum()<<endl;
+    ps.Delete("Rani");
+    cout<<"\nAfter deleting:\n"<<endl;
+    ps.inorder();
+    return 0;
+}
