@@ -1,0 +1,137 @@
+//Linked List based Implementation of Queue
+//Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+using namespace std;
+class PaperlessScholarship {
+private:
+    struct data {
+        string name;
+        string gender;
+        int hsc_mark;
+        float parent_income;
+        long int aadhar_no;
+        long int account_no;
+        struct data *nxt;
+    } *front = NULL, *p = NULL, *temp = NULL, *rear = NULL;
+public:
+    PaperlessScholarship() {
+        front = NULL;
+        p = NULL;
+        temp = NULL;
+        rear = NULL;
+    }
+    void Enqueue(string, string, int, float, long int, long int);
+    int Dequeue();
+    void display();
+    void ModifyFront(string);
+    void ModifyRear(string);
+    void PeekFront();
+    void PeekRear();
+    int isEmpty();
+    void clear();
+};
+int main() {
+    PaperlessScholarship ps;
+    ps.Enqueue("Rani", "F", 566, 720000, 908667576, 6745459);
+    ps.Enqueue("Fabina", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Teddy", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Priya", "F", 543, 767658, 876764435, 9877685);
+    ps.Enqueue("Dharshini", "F", 543, 767658, 876764435, 9877685);   
+    ps.display();
+    ps.Dequeue();    
+    cout << "\nAfter deleting:\n";
+    ps.display();  
+    ps.ModifyFront("Abi");
+    cout << "\nAfter modification @ front:\n";
+    ps.display();   
+    ps.ModifyRear("Jeni");
+    cout << "\nAfter modification @ rear:\n";
+    ps.display();   
+    cout << "\nIs the queue empty : " << ps.isEmpty();   
+    cout << "\nFront:\n";
+    ps.PeekFront();   
+    cout << "\nRear:\n";
+    ps.PeekRear();   
+    ps.clear();
+    ps.display();   
+    return 0;
+}
+void PaperlessScholarship::Enqueue(string n, string g, int h, float pc, long int adh, long int acc) {
+    temp = new struct data;
+    temp->name = n;
+    temp->gender = g;
+    temp->hsc_mark = h;
+    temp->parent_income = pc;
+    temp->aadhar_no = adh;
+    temp->account_no = acc;
+    temp->nxt = NULL;
+    if (front == NULL) {
+        front = rear = temp;
+        return;
+    }
+    rear->nxt = temp;
+    rear = temp;
+}
+void PaperlessScholarship::display() {
+    if (front == NULL) {
+        cout << "\nSorry.Stack is empty,can't print";
+        return;
+    }
+    p = front;
+    while (p != NULL) {
+        cout << "NAME: " << p->name << "\t--> GENDER: " << p->gender << "\t--> HSC Mark: " 
+             << p->hsc_mark << "\t--> Parent Income: " << p->parent_income << "\t--> Account Number: " 
+             << p->account_no << "\t--> Aadhar Number: " << p->aadhar_no << "\n";
+        p = p->nxt;
+    }
+}
+int PaperlessScholarship::Dequeue() {
+    if (front == NULL) {
+        cout << "\nSorry Queue is empty,can't print";
+        return -1;
+    }
+    int x = front->hsc_mark;
+    front = front->nxt;
+    return x;
+}
+void PaperlessScholarship::ModifyFront(string newData) {
+    if (front == NULL) {
+        cout << "\nSorry stack is empty,cannot modify TOP";
+        return;
+    }
+    front->name = newData;
+}
+void PaperlessScholarship::ModifyRear(string newData) {
+    if (front == NULL) {
+        cout << "\nSorry stack is empty,cannot modify TOP";
+        return;
+    }
+    rear->name = newData;
+}
+void PaperlessScholarship::PeekFront() {
+    if (front == NULL) {
+        cout << "\nSorry stack is empty,Stack underflow";
+        return;
+    }
+    p = front;
+    cout << "NAME: " << p->name << "\t--> GENDER: " << p->gender << "\t--> HSC Mark: " 
+         << p->hsc_mark << "\t--> Parent Income: " << p->parent_income << "\t--> Account Number: " 
+         << p->account_no << "\t--> Aadhar Number: " << p->aadhar_no << "\n";
+}
+void PaperlessScholarship::PeekRear() {
+    if (front == NULL) {
+        cout << "\nSorry stack is empty,Stack underflow";
+        return;
+    }
+    p = rear;
+    cout << "NAME: " << p->name << "\t--> GENDER: " << p->gender << "\t--> HSC Mark: " 
+         << p->hsc_mark << "\t--> Parent Income: " << p->parent_income << "\t--> Account Number: " 
+         << p->account_no << "\t--> Aadhar Number: " << p->aadhar_no << "\n";
+}
+int PaperlessScholarship::isEmpty() {
+    return (front == NULL);
+}
+void PaperlessScholarship::clear() {
+    front = NULL;
+}
