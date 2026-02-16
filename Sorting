@@ -1,0 +1,165 @@
+//Sorting
+//Problem Statement : Paperless Scholarship for students
+#include <iostream>
+#include <string>
+#define MAX 10
+using namespace std;
+struct data {
+    string name;
+    string gender;
+    int hsc_mark;
+    float parent_income;
+    long int aadhar_no;
+    long int account_no;
+};
+class PaperlessScholarship {
+private:
+    data arr[MAX];
+    int n;
+public:
+    void getData();
+    void display();
+    void bubbleSort();
+    void insertionSort();
+    void quickSort(int low, int high);
+    int partition(int low, int high);
+    void mergeSort(int l, int r);
+    void merge(int l, int m, int r);
+    int getN();
+};
+void PaperlessScholarship::getData() {
+    cout << "Enter the number of students : ";
+    cin >> n;
+    cout << "Enter the details :\n";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i].name >> arr[i].gender >> arr[i].hsc_mark >>
+            arr[i].parent_income >> arr[i].aadhar_no >> arr[i].account_no;
+    }
+}
+void PaperlessScholarship::display() {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i].name << " " << arr[i].gender << " " <<
+            arr[i].hsc_mark << " " << arr[i].parent_income << " " <<
+            arr[i].aadhar_no << " " << arr[i].account_no << endl;
+    }
+}
+void PaperlessScholarship::bubbleSort() {
+    data temp;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j].hsc_mark > arr[j + 1].hsc_mark) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+void PaperlessScholarship::insertionSort() {
+    for (int i = 1; i < n; i++) {
+        data key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && arr[j].hsc_mark > key.hsc_mark) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+void PaperlessScholarship::quickSort(int low, int high) {
+    if (low < high) {
+        int pi = partition(low, high);
+        quickSort(low, pi - 1);
+        quickSort(pi + 1, high);
+    }
+}
+int PaperlessScholarship::partition(int low, int high) {
+    int pivot = arr[high].hsc_mark;
+    int i = (low - 1);
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j].hsc_mark < pivot) {
+            i++;
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return (i + 1);
+}
+void PaperlessScholarship::mergeSort(int l, int r) {
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(l, m);
+        mergeSort(m + 1, r);
+        merge(l, m, r);
+    }
+}
+void PaperlessScholarship::merge(int l, int m, int r) {
+    int n1 = m - l + 1;
+    int n2 = r - m;
+    data L[n1], R[n2];
+    for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+    for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+
+    int i = 0, j = 0, k = l;
+    while (i < n1 && j < n2) {
+        if (L[i].hsc_mark <= R[j].hsc_mark) {
+            arr[k] = L[i];
+            i++;
+        } else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < n1) arr[k++] = L[i++];
+    while (j < n2) arr[k++] = R[j++];
+}
+int PaperlessScholarship::getN() {
+    return n;
+}
+void displayMenu() {
+    cout << "\nMenu:\n";
+    cout << "1. Bubble Sort\n";
+    cout << "2. Insertion Sort\n";
+    cout << "3. Quick Sort\n";
+    cout << "4. Merge Sort\n";
+    cout << "5. Exit\n";
+    cout << "Enter your choice: ";
+}
+int main() {
+    PaperlessScholarship sm;
+    int choice;
+    sm.getData();
+    while (true) {
+        displayMenu();
+        cin >> choice;
+        switch (choice) {
+        case 1:
+            sm.bubbleSort();
+            cout << "\nSorted data (Bubble Sort): \n";
+            sm.display();
+            break;
+        case 2:
+            sm.insertionSort();
+            cout << "\nSorted data (Insertion Sort): \n";
+            sm.display();
+            break;
+        case 3:
+            sm.quickSort(0, sm.getN() - 1);
+            cout << "\nSorted data (Quick Sort): \n";
+            sm.display();
+            break;
+        case 4:
+            sm.mergeSort(0, sm.getN() - 1);
+            cout << "\nSorted data (Merge Sort): \n";
+            sm.display();
+            break;
+        case 5:
+            cout << "Exiting the program.\n";
+            return 0;
+        default:
+            cout << "Invalid choice. Please try again.\n";
+        }
+    }
+    return 0;
+}
